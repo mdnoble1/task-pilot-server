@@ -25,9 +25,15 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+    
+    
+    
     // database collection
     const taskCollection = client.db("taskPilotDb").collection("tasks");
 
+    
+    
+    
     // get all tasks from database
     app.get("/tasks", async (req, res) => {
       const email = req.query.user_email;
@@ -43,6 +49,21 @@ async function run() {
       const result = await taskCollection.find(query).toArray();
       res.send(result);
     });
+
+
+
+    // adding a new task in database 
+    app.post("/tasks", async (req, res ) => {
+      const task = req.body;
+      const result = await taskCollection.insertOne(task);
+      res.send(result);
+    })  
+
+
+
+
+
+
 
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
