@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.crviidq.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -35,13 +35,13 @@ async function run() {
     
     
     // get all tasks from database
-    app.get("/tasks", async (req, res) => {
+    app.get("/tasks", async ( req, res ) => {
       const email = req.query.user_email;
 
       // Creating an empty query object
       let query = {};
 
-      // Checking for "product_owner"
+      // Checking for "user_email"
       if (email) {
         query.user_email = email;
       }
@@ -53,11 +53,19 @@ async function run() {
 
 
     // adding a new task in database 
-    app.post("/tasks", async (req, res ) => {
+    app.post("/tasks", async ( req, res ) => {
       const task = req.body;
       const result = await taskCollection.insertOne(task);
       res.send(result);
     })  
+
+    // deleting a task from database 
+    app.delete("/tasks/:id", async ( req, res ) => {
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)};
+      const result = await taskCollection.deleteOne(query);
+      res.send(result);
+    })
 
 
 
