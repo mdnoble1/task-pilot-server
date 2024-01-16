@@ -63,8 +63,9 @@ async function run() {
     // updating task status using patch method 
     app.patch('/tasks/:id', async(req, res) => {
       const id = req.params.id;
-      const status = req.body;
-      console.log(id, status)
+      const taskStatus = req.body;
+      console.log(id, taskStatus.stat);
+      const status = taskStatus.stat;
       const filter = {_id: new ObjectId(id)};
       
       const updateDoc = {
