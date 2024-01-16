@@ -59,6 +59,23 @@ async function run() {
       res.send(result);
     })  
 
+
+    // updating task status using patch method 
+    app.patch('/tasks/:id', async(req, res) => {
+      const id = req.params.id;
+      const status = req.body;
+      console.log(id, status)
+      const filter = {_id: new ObjectId(id)};
+      
+      const updateDoc = {
+        $set: {
+          status: `${status}`
+        }
+      }
+      const result = await taskCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
     // deleting a task from database 
     app.delete("/tasks/:id", async ( req, res ) => {
       const id = req.params.id;
